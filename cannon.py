@@ -1,19 +1,8 @@
-"""Cannon, hitting targets with projectiles.
-
-Exercises
-
-1. Keep score by counting target hits.
-2. Vary the effect of gravity3. Apply gravity to the targets.
-4. Change the speed of the ball.
-"""
-
 from random import randrange
 from turtle import (
-    clear, goto, dot, update,
-    ontimer, setup, hideturtle,
-    up, tracer, onscreenclick, done,
+    clear, dot, done, goto, hideturtle, onscreenclick,
+    ontimer, setup, tracer, up, update
 )
-
 from freegames import vector
 
 ball = vector(-200, -200)
@@ -26,8 +15,8 @@ def tap(x, y):
     if not inside(ball):
         ball.x = -199
         ball.y = -199
-        speed.x = (x + 200) / 25
-        speed.y = (y + 200) / 25
+        speed.x = (x + 200) / 10
+        speed.y = (y + 200) / 10
 
 
 def inside(xy):
@@ -58,7 +47,7 @@ def move():
         targets.append(target)
 
     for target in targets:
-        target.x -= 0.5
+        target.x -= 1.5
 
     if inside(ball):
         speed.y -= 0.35
@@ -68,17 +57,14 @@ def move():
     targets.clear()
 
     for target in dupe:
-        if abs(target - ball) > 13:
+        if abs(target - ball) > 13 and inside(target):
+            targets.append(target)
+        elif not inside(target):
+            target.x = 200
+            target.y = randrange(-150, 150)
             targets.append(target)
 
     draw()
-
-    # Reposition targets that leave the window so the game never ends.
-    for target in targets:
-        if not inside(target):
-            target.x = 200
-            target.y = randrange(-150, 150)
-
     ontimer(move, 50)
 
 
@@ -89,3 +75,5 @@ tracer(False)
 onscreenclick(tap)
 move()
 done()
+
+
